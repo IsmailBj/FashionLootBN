@@ -1,5 +1,5 @@
 const mongodb = require('mongodb');
-const getDb = require('../util/database').getDb;
+const getDb = require('../utils/database').getDb;
 
 class Box {
     constructor(boxName, id, price, items = []) {
@@ -21,7 +21,8 @@ class Box {
 
     static findAll() {
         const db = getDb();
-        return db.collection('boxes').find().toArray();
+        console.log(db, 'db')
+        return db.collection('Boxes').find().toArray();
     }
 }
 

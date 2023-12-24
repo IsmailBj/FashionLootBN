@@ -3,7 +3,7 @@ const router = express.Router()
 
 const BoxController = require('../controllers/BoxController')
 // http://localhost:3000/api/boxes/all
-router.get('/all', () => console.log("it works"))
+router.get('/all', BoxController.getAllBoxes)
 
 router.get('/new')
 
