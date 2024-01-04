@@ -21,7 +21,6 @@ class Box {
 
     static findAll() {
         const db = getDb();
-        console.log(db, 'db')
         return db.collection('Boxes').find().toArray();
     }
 }
