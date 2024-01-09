@@ -1,4 +1,4 @@
-const Box = require('../models/box')
+const Box = require('../models/box.model')
 
 exports.getAllBoxes = (req, res, next) => {
     Box.findAll()

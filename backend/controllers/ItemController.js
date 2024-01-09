@@ -1,4 +1,4 @@
-const Item = require('../models/item')
+const Item = require('../models/item.model')
 
 exports.getAllItems = (req, res, next) => {
     Item.findAll()
