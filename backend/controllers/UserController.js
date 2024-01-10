@@ -23,13 +23,15 @@ exports.loginUser = async (req, res, next) => {
         const user = await UserModel.findByEmail(email);
 
         if (!user) {
-            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+            console.log('user not found')
+            return res.json({ success: false, message: 'Invalid email or password' });
         }
 
         const isPasswordValid = await user.comparePassword(password);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ success: false, message: 'Invalid email or password' });
+            console.log('password not found')
+            return res.json({ success: false, message: 'Invalid email or password' });
         }
         res.json({ success: true, message: 'Login successful' });
     } catch (error) {

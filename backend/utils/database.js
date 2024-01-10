@@ -4,7 +4,7 @@ const MongoClient = mongodb.MongoClient
 let _db
 
 const mongoConnect = callback => {
-    MongoClient.connect('mongodb+srv://LootMan:l15zjuzMxXNOIIzU@clusterloot.kcvmtlr.mongodb.net/ProductsBox?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true, poolSize: 10, })
+    MongoClient.connect('mongodb+srv://LootMan:l15zjuzMxXNOIIzU@clusterloot.kcvmtlr.mongodb.net/ProductsBox?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true, poolSize: 10, connectTimeoutMS: 30000 })
         .then(client => {
             console.log('connected')
             _db = client.db()

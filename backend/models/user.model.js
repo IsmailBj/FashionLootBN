@@ -34,7 +34,6 @@ class UserModel {
     static async findByEmail(email) {
         const db = getDb();
         const userData = await db.collection('users').findOne({ email });
-        console.log(userData)
         if (!userData) {
             return null;
         }
