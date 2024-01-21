@@ -1,52 +1,39 @@
-// userModel.js
-const { getDb } = require('../utils/database');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-class UserModel {
-    constructor(username, email, password, gender) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.gender = gender;
-    }
+const userSchema = new mongoose.Schema({
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    gender: { type: String, required: true },
+});
 
-    async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-
-    async comparePassword(candidatePassword) {
-        return await bcrypt.compare(candidatePassword, this.password);
-    }
-
-    async save() {
-        try {
-            const db = getDb();
-            await this.hashPassword();
-            await db.collection('users').insertOne(this);
-
-            console.log('User saved successfully');
-        } catch (error) {
-            console.error('Error during user save:', error);
-            throw error;
-        }
-    }
-
-    static async findByEmail(email) {
-        const db = getDb();
-        const userData = await db.collection('users').findOne({ email });
-        if (!userData) {
-            return null;
+// Hash the password before saving to the database
+userSchema.pre('save', async function (next) {
+    try {
+        if (!this.isModified('password')) {
+            return next();
         }
 
-        const user = new UserModel(
-            userData.username,
-            userData.email,
-            userData.password,
-            userData.gender
-        );
-
-        return user;
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashedPassword;
+        next();
+    } catch (error) {
+        return next(error);
     }
-}
+});
+
+// Compare password for login
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Create indexes using createIndexes
+userSchema.index({ email: 1 }, { unique: true }); // Creating a unique index on the 'email' field
+
+const UserModel = mongoose.model('User', userSchema);
+
+// Explicitly call createIndexes to address the deprecation warning
+UserModel.createIndexes();
 
 module.exports = UserModel;

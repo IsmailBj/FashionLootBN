@@ -1,28 +1,14 @@
-const mongodb = require('mongodb');
-const getDb = require('../utils/database').getDb;
+const mongoose = require('mongoose');
 
-class Box {
-    constructor(boxName, id, price, items = []) {
-        this.boxName = boxName;
-        this.id = id;
-        this.price = price;
-        this.items = items;
-    }
+const BoxSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    tag: { type: String, required: true },
+    price: { type: Number, required: true },
+    items: { type: Object, required: true },
+    about: { type: String, required: false },
+    imgUrl: { type: String, required: true }
+});
 
-    save() {
-        const db = getDb();
-        return db.collection('boxes').insertOne(this);
-    }
+const BoxModel = mongoose.model('Boxes', BoxSchema);
 
-    static findById(boxId) {
-        const db = getDb();
-        return db.collection('boxes').findOne({ _id: new mongodb.ObjectID(boxId) });
-    }
-
-    static findAll() {
-        const db = getDb();
-        return db.collection('Boxes').find().toArray();
-    }
-}
-
-module.exports = Box;
+module.exports = BoxModel;

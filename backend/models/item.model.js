@@ -1,18 +1,12 @@
-const mongodb = require('mongodb')
-const getDb = require('../utils/database').getDb
+const mongoose = require('mongoose')
 
-class Item {
-    constructor(id, name, price, img) {
-        this.id = id,
-            this.name = name,
-            this.price = price,
-            this.img = img
-    }
+const ItemSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    id: { type: String, required: true },
+    price: { type: Number, required: true },
+    imgUrl: { type: String, required: true }
+})
 
-    static findAll() {
-        const db = getDb()
-        return db.collection('items').find().toArray()
-    }
-}
+const ItemModel = mongoose.model('items', ItemSchema)
 
-module.exports = Item
+module.exports = ItemModel

@@ -1,5 +1,5 @@
 const express = require('express')
-const mongoConnect = require('./utils/database').mongoConnect
+const mongoose = require('mongoose')
 const cors = require('cors');
 
 const app = express()
@@ -16,8 +16,14 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/api/boxes', boxesRoute)
 app.use('/api/items', itemsRoute)
 app.use('/api/user', AuthUser)
-mongoConnect(() => {
-    app.listen(3000, () => {
-        console.log('server running on PORT: ', `:${PORT}`)
-    });
+
+mongoose.connect('mongodb+srv://LootMan:l15zjuzMxXNOIIzU@clusterloot.kcvmtlr.mongodb.net/ProductsBox?retryWrites=true&w=majority', {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    poolSize: 10,
+    connectTimeoutMS: 30000
 })
+    .then(result => {
+        app.listen(PORT, result)
+
+    }).catch(err => console.log(err))
