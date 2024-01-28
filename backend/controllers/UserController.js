@@ -1,10 +1,10 @@
 const UserModel = require('../models/user.model');
-
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 exports.registerUser = async (req, res, next) => {
     try {
         const userData = req.body;
 
-        // Check if the email already exists
         const existingUser = await UserModel.findOne({ email: userData.email });
 
         if (existingUser) {
@@ -29,24 +29,73 @@ exports.registerUser = async (req, res, next) => {
 
 exports.loginUser = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { email, pass } = req.body;
         const user = await UserModel.findOne({ email });
 
         if (!user) {
-            console.log('user not found');
             return res.json({ success: false, message: 'Invalid email or password' });
         }
 
-        const isPasswordValid = await user.comparePassword(password);
+        const isPasswordValid = await user.comparePassword(pass);
 
         if (!isPasswordValid) {
-            console.log('password not found');
             return res.json({ success: false, message: 'Invalid email or password' });
         }
-
-        res.json({ success: true, message: 'Login successful' });
+        const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.json({ success: true, message: 'Login successful', token, expiresIn: 3600 });
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+exports.getUserData = async (req, res, next) => {
+    try {
+        const email = req.user.email
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        res.json({ success: true, user: { username: user.username, email: user.email, gender: user.gender } })
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error getUserData' });
+    }
+}
+
+exports.getAmount = async (req, res, next) => {
+    try {
+        const email = req.user.email;
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        res.json({ success: true, amount: user.amount });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error getAmount' });
+    }
+}
+
+exports.depositMoney = async (req, res, next) => {
+    try {
+        const email = req.user.email
+        const amount = req.body.amount
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        const newUser = new UserModel({
+            currency: amount
+        })
+        getAmount()
+        await newUser.save()
+        res.json({ success: true, message: 'User registered successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error depositMoney' });
+    }
+}

@@ -6,9 +6,11 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     gender: { type: String, required: true },
+    amount: { type: Number, require: false, default: 0 },
+    currency: { type: String, require: false, default: "USD" },
 });
 
-// Hash the password before saving to the database
+
 userSchema.pre('save', async function (next) {
     try {
         if (!this.isModified('password')) {
@@ -23,17 +25,17 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-// Compare password for login
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Create indexes using createIndexes
-userSchema.index({ email: 1 }, { unique: true }); // Creating a unique index on the 'email' field
+
+userSchema.index({ email: 1 }, { unique: true });
 
 const UserModel = mongoose.model('User', userSchema);
 
-// Explicitly call createIndexes to address the deprecation warning
+
 UserModel.createIndexes();
 
 module.exports = UserModel;
