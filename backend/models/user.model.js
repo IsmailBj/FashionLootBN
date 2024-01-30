@@ -30,6 +30,20 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
+userSchema.statics.getAmount = async function (email) {
+    try {
+        const user = await this.findOne({ email });
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        resUser = { amount: user.amount, currency: user.currency }
+        return resUser
+    } catch (error) {
+        throw new Error('Error getting user amount');
+    }
+};
+
 
 userSchema.index({ email: 1 }, { unique: true });
 

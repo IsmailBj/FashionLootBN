@@ -57,45 +57,19 @@ exports.getUserData = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
-
-        res.json({ success: true, user: { username: user.username, email: user.email, gender: user.gender } })
+        console.log({ success: true, user: { username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
+        res.json({ success: true, user: { username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getUserData' });
     }
 }
-
+// not tested
 exports.getAmount = async (req, res, next) => {
     try {
         const email = req.user.email;
-        const user = await UserModel.findOne({ email });
-
-        if (!user) {
-            return res.json({ success: false, message: 'User not found' });
-        }
-
-        res.json({ success: true, amount: user.amount });
+        const resUser = await UserModel.getAmount(email)
+        res.json({ success: true, wallet: { amount: resUser.amount, currency: resUser.currency } });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getAmount' });
-    }
-}
-
-exports.depositMoney = async (req, res, next) => {
-    try {
-        const email = req.user.email
-        const amount = req.body.amount
-        const user = await UserModel.findOne({ email });
-
-        if (!user) {
-            return res.json({ success: false, message: 'User not found' });
-        }
-
-        const newUser = new UserModel({
-            currency: amount
-        })
-        getAmount()
-        await newUser.save()
-        res.json({ success: true, message: 'User registered successfully' });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Internal server error depositMoney' });
     }
 }

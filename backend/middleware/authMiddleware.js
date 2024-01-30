@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const verifyToken = (req, res, next) => {
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
-
+    // token is undefined
     if (!token) {
         return res.status(401).json({ success: false, message: 'Unauthorized: Missing token' });
     }
@@ -12,8 +12,8 @@ const verifyToken = (req, res, next) => {
         if (err) {
             return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });
         }
-        console.log(decoded)
         req.user = decoded;
+        console.log("token treu ", decoded)
         next();
     });
 };
