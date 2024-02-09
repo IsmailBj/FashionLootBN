@@ -9,7 +9,11 @@ const boxesRoute = require('./routes/boxes')
 const itemsRoute = require('./routes/items')
 const AuthUser = require('./routes/auth')
 
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:3000',
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 
