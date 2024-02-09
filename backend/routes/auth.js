@@ -12,7 +12,7 @@ router.post('/logout')
 
 router.post('/resetpassword')
 
-router.get('/user-data', verifyToken, UserController.getUserData) // fix this
+router.post('/user-data', verifyToken, UserController.getUserData) // fix this
 
 router.get('/get-amount', verifyToken, UserController.getAmount) // fix this
 

@@ -57,8 +57,7 @@ exports.getUserData = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
-        console.log({ success: true, user: { username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
-        res.json({ success: true, user: { username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
+        res.json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getUserData' });
     }
