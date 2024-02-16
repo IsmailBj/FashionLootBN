@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon backend/server.js",
-    "online": "node backend/server.js"
+    "server": "node backend/server.js"
   },
   "author": "",
   "license": "ISC",
