@@ -42,7 +42,7 @@ exports.loginUser = async (req, res, next) => {
             return res.json({ success: false, message: 'Invalid email or password' });
         }
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ success: true, message: 'Login successful', token, expiresIn: 3600 });
+        res.json({ success: true, message: 'Login successful', token });
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });

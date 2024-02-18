@@ -11,6 +11,7 @@ const AuthUser = require('./routes/auth')
 
 const corsOptions = {
     origin: 'http://localhost:3000',
+    origin: 'http://localhost:3001'
 };
 
 app.use(cors(corsOptions));
@@ -30,7 +31,3 @@ mongoose.connect(process.env.MONGODB_URI, {
     app.listen(PORT, result)
     console.log('Server running on PORT ' + PORT)
 }).catch(err => console.log(err))
-
-
-
-// TODO https://chat.openai.com/c/efb9961a-8c51-4c7a-9222-4b439f606834
