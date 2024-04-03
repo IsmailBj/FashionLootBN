@@ -57,17 +57,46 @@ exports.getUserData = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
-        res.json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, currency: user.currency } } })
+        // TODO add multy currency
+        res.json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, pending: user.amount } } })
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getUserData' });
     }
 }
+
+exports.setUserAddress = async (req, res, next) => {
+    try {
+        const email = req.user.email
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        const userData = req.body
+
+        const userAddress = new UserModel({
+            country: userData.country,
+            city: userData.city,
+            street: userData.street,
+            streetNumber: userData.streetNumber,
+            postCode: userData.postCode
+        });
+
+        await userAddress.save();
+        res.json({ success: true, message: "address updated" })
+        // TODO test this api 
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error setUserAddress' });
+    }
+}
+
 // not tested
 exports.getAmount = async (req, res, next) => {
     try {
         const email = req.user.email;
         const resUser = await UserModel.getAmount(email)
-        res.json({ success: true, wallet: { amount: resUser.amount, currency: resUser.currency } });
+        res.json({ success: true, wallet: { amount: resUser.amount, pending: user.amount } });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getAmount' });
     }

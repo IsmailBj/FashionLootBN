@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     gender: { type: String, required: true },
     amount: { type: Number, require: false, default: 0 },
-    currency: { type: String, require: false, default: "USD" },
+    pending: { type: Number, require: false, default: 0 },
+    country: { type: String, require: false },
+    city: { type: String, require: false },
+    street: { type: String, require: false },
+    streetNumber: { type: Number, require: false },
+    postCode: { type: Number, require: false },
 });
 
 
