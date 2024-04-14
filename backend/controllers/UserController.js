@@ -57,7 +57,6 @@ exports.getUserData = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
-        // TODO add multy currency
         res.json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, pending: user.amount } } })
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getUserData' });
@@ -91,13 +90,23 @@ exports.setUserAddress = async (req, res, next) => {
     }
 }
 
-// not tested
+
 exports.getAmount = async (req, res, next) => {
     try {
         const email = req.user.email;
-        const resUser = await UserModel.getAmount(email)
-        res.json({ success: true, wallet: { amount: resUser.amount, pending: user.amount } });
+        const amount = req.body.amount
+        const user = await UserModel.findOne({ email })
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        user.amount += amount;
+        user.pending += amount;
+
+        await user.save();
+
+        res.json({ success: true, status: 'completed' });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Internal server error getAmount' });
+        res.json({ success: false, status: 'failed' });
     }
 }

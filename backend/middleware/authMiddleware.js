@@ -6,7 +6,6 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         return res.status(401).json({ success: false, message: 'Unauthorized: Missing token' });
     }
-
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             return res.status(401).json({ success: false, message: 'Unauthorized: Invalid token' });

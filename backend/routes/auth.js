@@ -14,8 +14,8 @@ router.post('/resetpassword')
 
 router.get('/user-data', verifyToken, UserController.getUserData)
 
-router.post('/address', verifyToken, UserController.setUserAddress)
+router.post('/address', verifyToken, UserController.setUserAddress) // fix this
 
-router.get('/get-amount', verifyToken, UserController.getAmount) // fix this
+router.post('/buy-coints', verifyToken, UserController.getAmount)
 
 module.exports = router
