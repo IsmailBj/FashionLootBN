@@ -63,32 +63,58 @@ exports.getUserData = async (req, res, next) => {
     }
 }
 
-exports.setUserAddress = async (req, res, next) => {
+exports.getAddressList = async (req, res, next) => {
     try {
-        const email = req.user.email
+        const email = req.user.email;
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        const addresses = user.addresses;
+
+        if (addresses.length === 0) {
+            return res.json({ success: false, message: 'No addresses saved for the user' });
+        }
+
+        res.json({ success: true, addresses });
+
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+exports.setNewAddress = async (req, res, next) => {
+    try {
+        const email = req.user.email;
+        const addressData = req.body;
+
         const user = await UserModel.findOne({ email });
 
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
 
-        const userData = req.body
+        const newAddress = {
+            country: addressData.country,
+            firstName: addressData.firstName,
+            lastName: addressData.lastName,
+            phoneNr: addressData.phoneNumber,
+            city: addressData.city,
+            street: addressData.street,
+            streetNumber: addressData.streetNr,
+            postCode: addressData.postCode,
+        };
 
-        const userAddress = new UserModel({
-            country: userData.country,
-            city: userData.city,
-            street: userData.street,
-            streetNumber: userData.streetNumber,
-            postCode: userData.postCode
-        });
-
-        await userAddress.save();
-        res.json({ success: true, message: "address updated" })
-        // TODO test this api 
+        user.addresses.push(newAddress);
+        await user.save();
+        res.json({ success: true, message: 'Address added successfully' }); // Send success response
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Internal server error setUserAddress' });
+        console.error('Error setting new address:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
-}
+};
+
 
 
 exports.getAmount = async (req, res, next) => {

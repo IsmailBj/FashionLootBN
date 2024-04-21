@@ -14,7 +14,9 @@ router.post('/resetpassword')
 
 router.get('/user-data', verifyToken, UserController.getUserData)
 
-router.post('/address', verifyToken, UserController.setUserAddress) // fix this
+router.get('/user-address', verifyToken, UserController.getAddressList)
+
+router.post('/add-address', verifyToken, UserController.setNewAddress)
 
 router.post('/buy-coints', verifyToken, UserController.getAmount)
 

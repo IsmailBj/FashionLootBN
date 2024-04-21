@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const addressSchema = new mongoose.Schema({
+    country: { type: String, required: false },
+    firstName: { type: String, required: false },
+    lastName: { type: String, required: false },
+    phoneNr: { type: String, require: false },
+    city: { type: String, required: false },
+    street: { type: String, required: false },
+    streetNumber: { type: String, required: false },
+    postCode: { type: String, required: false },
+});
+
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -8,11 +19,7 @@ const userSchema = new mongoose.Schema({
     gender: { type: String, required: true },
     amount: { type: Number, require: false, default: 0 },
     pending: { type: Number, require: false, default: 0 },
-    country: { type: String, require: false },
-    city: { type: String, require: false },
-    street: { type: String, require: false },
-    streetNumber: { type: Number, require: false },
-    postCode: { type: Number, require: false },
+    addresses: [addressSchema]
 });
 
 
@@ -57,4 +64,4 @@ const UserModel = mongoose.model('User', userSchema);
 
 UserModel.createIndexes();
 
-module.exports = UserModel;
+module.exports = UserModel
