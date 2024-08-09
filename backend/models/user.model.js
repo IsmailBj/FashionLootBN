@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema({
     addresses: [addressSchema]
 });
 
-
 userSchema.pre('save', async function (next) {
     try {
         if (!this.isModified('password')) {
@@ -36,7 +35,6 @@ userSchema.pre('save', async function (next) {
         return next(error);
     }
 });
-
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
