@@ -9,10 +9,11 @@ const boxesRoute = require('./routes/boxes')
 const itemsRoute = require('./routes/items')
 const AuthUser = require('./routes/auth')
 
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
+
 const corsOptions = {
-    origin: 'http://localhost:3000',
-    origin: 'http://localhost:3001',
-    origin: 'http://localhost:3002'
+    origin: allowedOrigins,
+    credentials: true,
 };
 
 app.use(cors(corsOptions));

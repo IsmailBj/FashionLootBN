@@ -20,4 +20,6 @@ router.post('/add-address', verifyToken, UserController.setNewAddress)
 
 router.post('/buy-coints', verifyToken, UserController.getAmount)
 
+router.get('/allUs', UserController.getAllUsers )
+
 module.exports = router

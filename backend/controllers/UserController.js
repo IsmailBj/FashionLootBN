@@ -1,10 +1,11 @@
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+
 exports.registerUser = async (req, res, next) => {
     try {
         const userData = req.body;
-
         const existingUser = await UserModel.findOne({ email: userData.email });
 
         if (existingUser) {
@@ -134,5 +135,17 @@ exports.getAmount = async (req, res, next) => {
         res.json({ success: true, status: 'completed' });
     } catch (error) {
         res.json({ success: false, status: 'failed' });
+    }
+}
+
+
+exports.getAllUsers = async (req, res , next) =>{
+    try {
+        const item = await UserModel.find();
+        
+        res.json({ item });
+    } catch (error) {
+        console.error('Error fetching boxes:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
