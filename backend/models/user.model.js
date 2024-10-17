@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
     gender: { type: String, required: true },
     amount: { type: Number, require: false, default: 0 },
     pending: { type: Number, require: false, default: 0 },
+    boxCount: { type: Number, require: true, default: 0 },
     addresses: [addressSchema]
 });
 

@@ -139,11 +139,11 @@ exports.getAmount = async (req, res, next) => {
 }
 
 
-exports.getAllUsers = async (req, res , next) =>{
+exports.getAllUsers = async (req, res, next) => {
     try {
-        const item = await UserModel.find();
-        
-        res.json({ item });
+        const items = await UserModel.find();
+
+        res.json({ items });
     } catch (error) {
         console.error('Error fetching boxes:', error);
         res.status(500).json({ error: 'Internal Server Error' });
