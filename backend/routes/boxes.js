@@ -9,4 +9,6 @@ router.get('/new')
 
 router.get('/hot')
 
+router.post('/add-box', BoxController.addNewBox)
+
 module.exports = router
