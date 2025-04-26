@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-exports.registerUser = async (req, res, next) => {
+exports.registerUser = async (req, res) => {
     try {
         const userData = req.body;
         const existingUser = await UserModel.findOne({ email: userData.email });
@@ -20,7 +20,7 @@ exports.registerUser = async (req, res, next) => {
         });
 
         await newUser.save();
-        res.json({ success: true, message: 'User registered successfully' });
+        res.status(200).json({ success: true, message: 'User registered successfully' });
     } catch (error) {
         console.error('Error during user registration:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -28,7 +28,7 @@ exports.registerUser = async (req, res, next) => {
 };
 
 
-exports.loginUser = async (req, res, next) => {
+exports.loginUser = async (req, res) => {
     try {
         const { email, pass } = req.body;
         const user = await UserModel.findOne({ email });
@@ -43,7 +43,9 @@ exports.loginUser = async (req, res, next) => {
             return res.json({ success: false, message: 'Invalid email or password' });
         }
         const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ success: true, message: 'Login successful', token });
+
+        res.status(200).json({ success: true, message: 'Login successful', token });
+
     } catch (error) {
         console.error('Error during user login:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -58,7 +60,7 @@ exports.getUserData = async (req, res, next) => {
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
         }
-        res.json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, pending: user.amount } } })
+        res.status(200).json({ success: true, user: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, pending: user.amount } } })
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error getUserData' });
     }
@@ -78,7 +80,7 @@ exports.getAddressList = async (req, res, next) => {
             return res.json({ success: false, message: 'No addresses saved for the user' });
         }
 
-        res.json({ success: true, addresses });
+        res.status(200).json({ success: true, addresses });
 
     } catch (error) {
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -109,7 +111,7 @@ exports.setNewAddress = async (req, res, next) => {
 
         user.addresses.push(newAddress);
         await user.save();
-        res.json({ success: true, message: 'Address added successfully' }); // Send success response
+        res.status(200).json({ success: true, message: 'Address added successfully' }); // Send success response
     } catch (error) {
         console.error('Error setting new address:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
@@ -132,7 +134,7 @@ exports.getAmount = async (req, res, next) => {
 
         await user.save();
 
-        res.json({ success: true, status: 'completed' });
+        res.status(200).json({ success: true, status: 'completed' });
     } catch (error) {
         res.json({ success: false, status: 'failed' });
     }
@@ -143,7 +145,7 @@ exports.getAllUsers = async (req, res, next) => {
     try {
         const items = await UserModel.find();
 
-        res.json({ items });
+        res.status(200).json({ items });
     } catch (error) {
         console.error('Error fetching boxes:', error);
         res.status(500).json({ error: 'Internal Server Error' });

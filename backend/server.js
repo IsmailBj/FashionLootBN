@@ -9,6 +9,7 @@ const boxesRoute = require('./routes/boxes')
 const itemsRoute = require('./routes/items')
 const AuthUser = require('./routes/auth')
 
+//                        Back-End (current)        Front-End (users)        Front-End (admin)
 const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
 
 const corsOptions = {

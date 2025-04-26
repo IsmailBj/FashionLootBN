@@ -5,7 +5,7 @@ const addressSchema = new mongoose.Schema({
     country: { type: String, required: false },
     firstName: { type: String, required: false },
     lastName: { type: String, required: false },
-    phoneNr: { type: String, require: false },
+    phoneNr: { type: String, required: false },
     city: { type: String, required: false },
     street: { type: String, required: false },
     streetNumber: { type: String, required: false },
@@ -17,9 +17,10 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     gender: { type: String, required: true },
-    amount: { type: Number, require: false, default: 0 },
-    pending: { type: Number, require: false, default: 0 },
-    boxCount: { type: Number, require: true, default: 0 },
+    amount: { type: Number, required: false, default: 0 },
+    pending: { type: Number, required: false, default: 0 },
+    boxCount: { type: Number, required: true, default: 0 },
+    currency: { type: String, required: false, default: "USD" },
     addresses: [addressSchema]
 });
 

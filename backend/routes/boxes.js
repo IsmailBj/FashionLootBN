@@ -5,10 +5,10 @@ const BoxController = require('../controllers/BoxController')
 
 router.get('/all', BoxController.getAllBoxes)
 
-router.get('/new')
-
-router.get('/hot')
-
 router.post('/add-box', BoxController.addNewBox)
+
+router.put('/update', BoxController.updateBoxByTitle)
+
+router.delete('/remove-box', BoxController.removeBox)
 
 module.exports = router
