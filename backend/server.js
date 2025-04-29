@@ -29,7 +29,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     poolSize: 10,
-    connectTimeoutMS: 30000
+    connectTimeoutMS: 30000,
+    useFindAndModify: false
 }).then(result => {
     app.listen(PORT, result)
     console.log('Server running on PORT ' + PORT)
