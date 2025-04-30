@@ -1,6 +1,8 @@
 ## 🧠 FashionLoot Backend API
 
-    This is the backend service for the FashionLoot application. It serves as the central API for managing users, boxes, and items. This backend is connected to multiple front-end projects, including the user-facing website and the admin dashboard.
+    This is the backend service for the FashionLoot application. It serves as the central API for managing 
+    users, boxes, and items. This backend is connected to multiple front-end projects, 
+    including the user-facing website and the admin dashboard.
 
 ## 🚀 Tech Stack
 
@@ -15,14 +17,18 @@
 ### ⚙️ Environment Setup
 
     1. Clone the Repository
-        git clone https://github.com/your-username/fashionloot-backend.git
+       git clone https://github.com/IsmailBj/FashionLootBN.git
+       cd backend
+       
     2. Install Dependencies
         npm install or npm i
+        
     3.Create a .env file with:
         PORT=                               # The port your backend server will run on
         MONGODB_URI=mongodb:                # Your MongoDB connection string
         JWT_SECRET=your_super_secret_key    # Secret key for signing JWTs
         BCRYPT_SALT_ROUNDS=                 # Number of salt rounds for bcrypt (e.g., 10)
+        
     4. Start the Server
         npm run start
         npm run online { For production }
@@ -42,9 +48,10 @@
     └── package.json
 
 🔐 Authentication & Authorization
-• JWT is used to authenticate users.
-• Middleware like verifyToken and isAdmin protects private and admin-only routes.
-• Users have roles like user and admin stored in the DB.
+
+    • JWT is used to authenticate users.
+    • Middleware like verifyToken and isAdmin protects private and admin-only routes.
+    • Users have roles like user and admin stored in the DB.
 
 🔌 API Routes
 | Route | Method | Description | Access |
