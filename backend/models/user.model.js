@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     pending: { type: Number, required: false, default: 0 },
     boxCount: { type: Number, required: true, default: 0 },
     currency: { type: String, required: false, default: "USD" },
+    role: { type: String, required: true, default: "client" },
     addresses: [addressSchema]
 });
 
@@ -30,8 +31,10 @@ userSchema.pre('save', async function (next) {
             return next();
         }
 
-        const hashedPassword = await bcrypt.hash(this.password, 10);
+        const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS)
+        const hashedPassword = await bcrypt.hash(this.password, saltRounds);
         this.password = hashedPassword;
+
         next();
     } catch (error) {
         return next(error);
@@ -43,17 +46,9 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 userSchema.statics.getAmount = async function (email) {
-    try {
-        const user = await this.findOne({ email });
-
-        if (!user) {
-            throw new Error('User not found');
-        }
-        resUser = { amount: user.amount, currency: user.currency }
-        return resUser
-    } catch (error) {
-        throw new Error('Error getting user amount');
-    }
+    const user = await this.findOne({ email }).select('amount currency');
+    if (!user) throw new Error('User not found');
+    return { amount: user.amount, currency: user.currency };
 };
 
 

@@ -1,8 +1,6 @@
 const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
-const saltRounds = 10;
-require('dotenv').config();
 
 
 exports.registerUser = async (req, res) => {
@@ -14,12 +12,10 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ error: 'Email already in use' });
         }
 
-        const hashedPassword = await bcrypt.hash(userData.password, saltRounds)
-
         const newUser = new UserModel({
             username: userData.username,
             email: userData.email,
-            password: hashedPassword,
+            password: userData.password,
             gender: userData.gender
         });
 
@@ -34,34 +30,32 @@ exports.registerUser = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
-        const { email, pass } = req.body;
-
+        const { email, password } = req.body;
         const user = await UserModel.findOne({ email });
 
         if (!user) {
-            return res.json({ error: 'Invalid email or password' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        const isPasswordValid = await user.comparePassword(pass);
+        const isPasswordValid = await user.comparePassword(password);
 
         if (!isPasswordValid) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
 
         const token = jwt.sign(
-            { id: userl._id, email: user.email },
+            { id: user._id, email: user.email },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         )
 
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+
         res.status(200).json({
             message: 'Login successful',
             token,
-            payload: {
-                username: user.username,
-                email: user.email,
-                gender: user.gender
-            }
+            payload: userWithoutPassword
         });
 
     } catch (error) {
@@ -73,12 +67,12 @@ exports.loginUser = async (req, res) => {
 exports.getUserData = async (req, res) => {
     try {
         const email = req.user.email
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email }).select('-password');
 
         if (!user) {
-            return res.status(404).json({ error: false, message: 'User not found' });
+            return res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json({ message: "user data send successful", payload: { isUserLogin: true, username: user.username, email: user.email, wallet: { amount: user.amount, pending: user.amount } } })
+        res.status(200).json({ message: "user data send successful", payload: user })
     } catch (error) {
         res.status(500).json({ error: 'Internal server error getUserData' });
     }
@@ -99,7 +93,7 @@ exports.getAddressList = async (req, res) => {
             return res.status(200).json({ error: 'No addresses saved for the user' });
         }
 
-        res.status(200).json({ message: "user address list send successful", addresses });
+        res.status(200).json({ message: "user address list send successful", payload: addresses });
 
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
@@ -120,7 +114,7 @@ exports.setNewAddress = async (req, res) => {
         user.addresses.push(addressData);
 
         await user.save();
-        res.status(200).json({ message: 'Address updated successfully', addresses: user.addresses });
+        res.status(200).json({ message: 'Address updated successfully', payload: user.addresses });
     } catch (error) {
         console.error('Error setting new address:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -132,7 +126,7 @@ exports.setNewAddress = async (req, res) => {
 exports.getAmount = async (req, res) => {
     try {
         const email = req.user.email;
-        const amount = req.body.amount
+        const error = req.body.amount
         const user = await UserModel.findOne({ email })
         if (!user) {
             return res.json({ success: false, message: 'User not found' });
